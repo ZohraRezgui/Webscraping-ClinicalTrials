@@ -1,36 +1,22 @@
-
-# coding: utf-8
-
-# In[1]:
-
-
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
 
-
-# In[2]:
-
-
 import os
 import time
-#Must download Chrome driver and save it in folder of your choice, I saved it in the path below. The instruction below 
+
+#Must download Chrome driver and save it in folder of your choice. The instruction below 
 #sets the path of the python environment to where the driver is located
 
-start_time = time.clock()
 os.environ["PATH"] += os.pathsep + r'C:\Users\zohra.rezgui\Documents\Selenium';
 driver = webdriver.Chrome()
 
 
-# In[3]:
-
-
 #condition to be searched in the site
 condition = 'Breast+Cancer'
-#driver opens a Chrome tab and opens the url below
+#Opening URL
 driver.get("https://clinicaltrials.gov/ct2/results?cond="+ condition +"&rank=1&view=record#rowId0")
 
 
-# In[4]:
 
 
 from selenium.webdriver.support.ui import WebDriverWait
@@ -40,7 +26,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 
 
 
-#defining a waiting parameter that will be used later on to make sure elements of the page load properly
+#defining a waiting parameter
 wait = WebDriverWait(driver,10)
 
 
@@ -83,13 +69,12 @@ time.sleep(1)
 clicking_show_hide_cols()
 time.sleep(1)
 
-#Hiding Locations Column: We will extract locations from inside the study using Beautiful Soup since it's not always provided
-#and that's problematic with using selenium
+#Hiding Locations Column
 wait.until(EC.presence_of_element_located((By.XPATH,'//*[@id="theDataTable_wrapper"]/div[3]/div/button[22]'))).click()
 time.sleep(1)
 
 
-#Selecting Status: Checkbox
+#Selecting Status of Studies
 driver.find_element_by_id('suspendedCB').click()
 driver.find_element_by_id('terminatedCB').click()
 driver.find_element_by_id('withdrawnCB').click()
@@ -100,15 +85,10 @@ driver.find_element_by_xpath('//*[@id="FiltersBody"]/div[1]/input[1]').click()
 time.sleep(3)
 
 
-# In[5]:
-
-
 #showing 100 observations per page
 select = Select(driver.find_element_by_name('theDataTable_length'))
 select.select_by_value('100')
 
-
-# In[6]:
 
 
 
@@ -123,14 +103,14 @@ Status =  []
 
 page_index = 1
 
-#while next_page button is not disabled: While we can still go to next page
+
 while 'disabled' not in class_name :
 
     time.sleep(5)
     
     print('Getting data from page {}'.format(page_index))
     
-    #Counting how many rows of the table appear, we could also just assume 100 but it would be problematic for last page
+    #Counting how many rows of the table appear
     table = driver.find_element_by_id('theDataTable')
     row_count = len(table.find_elements_by_tag_name("tr")) 
     
@@ -161,19 +141,6 @@ while 'disabled' not in class_name :
     print('Collected {} NCT Numbers'.format(len(NCT_Number)))
    
 
-    
-    
-    
-
-
-
-
-
-
-    
-
-
-# In[8]:
 
 
 import requests
@@ -190,29 +157,29 @@ def get_criteria(NCTnumber):
     ClinicalTrialpage = requests.get(url)
     soup = BeautifulSoup(ClinicalTrialpage.text, 'html.parser')
     
-    #the Eligibility criteria has to be in a list format for this to work, numbered or not numbered
+    #the Eligibility criteria has to be in a list format for this to work, ordered or not ordered
     wrapping_crit_class = soup.find_all("div", {"class": "indent1"})
     wrapping_crit_class = wrapping_crit_class[1].find_all("div", {"class":"indent2"})
     list_elements = wrapping_crit_class[1].find_all(re.compile("(ul|ol)"))
     inclusion, exclusion  = ('','')
     
-    #if there aren't any list elements 
+
     if not list_elements:
         print ("WARNING: Study number " + NCTnumber + " doesn't have eligibility criteria or HTML tag format is not a list")
     else:
-        #if only inclusion OR exclusion criteria are described
+
         if len(list_elements) == 1: 
             if wrapping_crit_class[1].find(text = 'Inclusion Criteria:'):
                 inclusion = list_elements[0].find_all("li")
                 
             elif wrapping_crit_class[1].find(text = 'Exclusion Criteria:'):
                 exclusion = list_elements[0].find_all("li")
-        #if both criterions are available
+
         else:
             inclusion = list_elements[0].find_all("li")
             exclusion = list_elements[1].find_all("li")
      
-    #stripping start/end spaces from the eligibility statements and joining them into a string
+  
     inclusion = [t.text.strip() for t in inclusion ]
     inclusion = ' '.join(inclusion)
     exclusion = [t.text.strip() for t in exclusion ]
@@ -268,7 +235,7 @@ def get_study_center( NCTnumber):
         
     return (center)
 
-#a main function that uses all the previous to get data from all studies
+#Main function using all previous functions
 def get_data(NCT_list):
     inclusion_list = []
     exclusion_list = []
@@ -296,25 +263,18 @@ def get_data(NCT_list):
 Inclusion, Exclusion, Enrollment, Location, Center = get_data(NCT_Number)
 
 
-# In[12]:
 
 
-#Merging the data into a dataframe
+#Merging into df and saving into excel
 import pandas as pd
 dataset = pd.DataFrame({ 'Study Identifier': NCT_Number, 'Status': Status,'Location (Country)': Location, 'Center': Center ,'Number of Patients Enrolled': Enrollment, 'Inclusion': Inclusion, 'Exclusion': Exclusion})
 
 
-# In[13]:
-
-
-#Saving the dataframe to an excel file
 writer = pd.ExcelWriter(r'C:\Users\zohra.rezgui\Documents\clinicaltrials.xlsx')
 dataset.to_excel(writer)
 writer.save()
 
 
-# In[14]:
 
 
-print (time.clock() - start_time, "seconds")
 
