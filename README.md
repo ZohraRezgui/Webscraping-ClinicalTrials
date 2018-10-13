@@ -7,3 +7,12 @@ It is commented and I believe can be considered as a tutorial for any person wil
 
 This is my first project I post on github so please let me know if there's any suggestion to make it look better and don't hesitate to ask me any question :)! 
 
+## Dependencies
+
+* selenium 
+* pandas
+* requests
+* bs4
+* re
+* os
+* time
