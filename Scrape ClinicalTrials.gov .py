@@ -1,5 +1,9 @@
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
+import pandas as pd
+import requests
+from bs4 import BeautifulSoup
+import re
 
 import os
 import time
@@ -143,9 +147,7 @@ while 'disabled' not in class_name :
 
 
 
-import requests
-from bs4 import BeautifulSoup
-import re
+
 
 
 #function that gets Separated Inclusion and Exclusion Criteria from a study
@@ -266,7 +268,7 @@ Inclusion, Exclusion, Enrollment, Location, Center = get_data(NCT_Number)
 
 
 #Merging into df and saving into excel
-import pandas as pd
+
 dataset = pd.DataFrame({ 'Study Identifier': NCT_Number, 'Status': Status,'Location (Country)': Location, 'Center': Center ,'Number of Patients Enrolled': Enrollment, 'Inclusion': Inclusion, 'Exclusion': Exclusion})
 
 
