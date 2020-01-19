@@ -3,6 +3,16 @@
 clinicaltrials.gov is an important resource of clinical trial data. However, downloading the data from the website can be more time consuming than necessary and there is not a way to download the information on enrollment, inclusion and exclusion criteria. The point of this project is to facilitate downloading such information, that may come in handy, examples of that are when doing a feasability study of clinical trials or when studying the impact of words used in patient selection criteria on the enrollment.
 
 
+# Dependencies
+
+All the dependencies are specified in the (requirements.txt) file.
+run :
+
+
+```
+pip install -r requirements.txt 
+```
+
 
 # Usage
 
@@ -12,6 +22,9 @@ clinicaltrials.gov is an important resource of clinical trial data. However, dow
  * listed_attributes: The attributes you wish to appear in the search page, these will also appear in the resulting dataset
  * listed_states: the list of states you want to select in the database
  * amount_of_data: number of studies you wish to scrape
+ 
+ 
+ 
  
  
  
