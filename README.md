@@ -1,18 +1,18 @@
-# Webscraping ClinicalTrials.gov 
+# Scraping clinical trial data
 
-This code in Python 3 uses mainly Selenium and BeautifulSoup and can be helpful to extract the inclusion/exclusion criterions as well as location, center, status and enrollment of the studies. 
-It picks studies with specific status values. I just kept the code as I wrote it for personal use but it can be easily tinkered for other uses.
+clinicaltrials.gov is an important resource of clinical trial data. However, downloading the data from the website can be more time consuming than necessary and there is not a way to download the information on enrollment, inclusion and exclusion criteria. The point of this project is to facilitate downloading such information, that may come in handy, examples of that are when doing a feasability study of clinical trials or when studying the impact of words used in patient selection criteria on the enrollment.
 
-It is commented and I believe can be considered as a tutorial for any person willing to know more about beautifulsoup or selenium to extract data.
 
-This is my first project I post on github so please let me know if there's any suggestion to make it look better and don't hesitate to ask me any question :)! 
 
-## Dependencies
+# Usage
 
-* selenium 
-* pandas
-* requests
-* bs4
-* re
-* os
-* time
+[The tutorial](Tutorial.ipynb) shows an example of usage of the scraper. The module scrapeThisData.py contains the Class ScrapeThatData. You just have to import the class and instanciate it with a specified waiting time threshold for loading lazy web pages. Afterwards , you specify the parameters to the __call__ function of the instanciate object:
+
+ * condition : The condition to search in the clinical trials database
+ * listed_attributes: The attributes you wish to appear in the search page, these will also appear in the resulting dataset
+ * listed_states: the list of states you want to select in the database
+ * amount_of_data: number of studies you wish to scrape
+ 
+ 
+ 
+ 

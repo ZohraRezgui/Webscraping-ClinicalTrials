@@ -12,17 +12,26 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
+import chromedriver_autoinstaller
 
 class ScrapeThatData:
     
-    def __init__(self, chrome_webdriver_path, time_threshold = 10):
-        os.environ["PATH"] += os.pathsep +chrome_webdriver_path
-        chrome_options = webdriver.ChromeOptions()
-        chrome_options.add_argument('--no-sandbox')
-        self.driver = webdriver.Chrome(options=chrome_options)
+    def __init__(self, time_threshold = 10):
+        
+        try:
+            chrome_options = webdriver.ChromeOptions()
+            chrome_options.add_argument('--no-sandbox')
+            self.driver = webdriver.Chrome(options=chrome_options)
+            
+        except:
+            chromedriver_autoinstaller.install()
+            chrome_options = webdriver.ChromeOptions()
+            chrome_options.add_argument('--no-sandbox')
+            self.driver = webdriver.Chrome(options=chrome_options)
+            
+            
+
         self.wait = WebDriverWait(self.driver,10)
-
-
         self.attribute_dict = {'status':1 ,'conditions':2, 'interventions': 3, 'study type':4, 
                    'phase':5, 'sponsor':6, 'funder type':7 , 'study design': 8,
                    'outcome measures':9, 'number enrolled':10, 'sex':11, 'age':12,
