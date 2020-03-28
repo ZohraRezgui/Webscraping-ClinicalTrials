@@ -31,7 +31,7 @@ class ScrapeThatData:
             
             
 
-        self.wait = WebDriverWait(self.driver,10)
+        self.wait = WebDriverWait(self.driver,time_threshold)
         self.attribute_dict = {'status':1 ,'conditions':2, 'interventions': 3, 'study type':4, 
                    'phase':5, 'sponsor':6, 'funder type':7 , 'study design': 8,
                    'outcome measures':9, 'number enrolled':10, 'sex':11, 'age':12,
@@ -40,7 +40,7 @@ class ScrapeThatData:
                    'last update posted': 20 , 'results first posted': 21 , 'locations':22, 'study documents': 23}
 
         self.status_dict =     {'not yet recruiting' : 'notYetRecrCB',
-         'recruiting' : 'rectruitingCB',
+         'recruiting' : 'recruitingCB',
          'enrolling by invitation':'enrollingByInvCB',
          'active, not recruiting': 'activeCB',
          'suspended': 'suspendedCB',
@@ -84,7 +84,7 @@ class ScrapeThatData:
 
         select = Select(self.driver.find_element_by_name('theDataTable_length'))
         select.select_by_value('100')
-        
+
     def collect_data_search_page(self,l_ordered, amount_of_data = None):
 
         class_name = ''
@@ -96,7 +96,7 @@ class ScrapeThatData:
            
 
 
-            time.sleep(5)
+            time.sleep(10)
 
             print('Getting data from page {}'.format(page_index))
 
@@ -143,10 +143,12 @@ class ScrapeThatData:
             #Going to the next page
             next_page.click()
             page_index += 1
-            if len(elements) >= amount_of_data:
-                break
-            else:
-                continue
+            
+            if amount_of_data:
+                if len(elements) >= amount_of_data or row_count < amount_of_data :
+                    break
+                else:
+                    continue
 
         return elements
 
@@ -179,10 +181,9 @@ class ScrapeThatData:
                 exclusion = list_elements[1].find_all("li")
 
 
-        inclusion = [t.text.strip() for t in inclusion ]
-        inclusion = ' '.join(inclusion)
-        exclusion = [t.text.strip() for t in exclusion ]
-        exclusion = ' '.join(exclusion)
+        inclusion = ' '.join([t.text.strip() for t in inclusion ])
+        exclusion = ' '.join([t.text.strip() for t in exclusion ])
+        
         return(inclusion, exclusion)
 
 #function that gets number of patients enrolled in a study
@@ -208,22 +209,28 @@ class ScrapeThatData:
         
         self.driver.get('https://clinicaltrials.gov/ct2/results?cond=' + condition + '&rank=1&view=record#rowId0')
         self.select_attributes_to_show(listed_attributes, self.attribute_dict)
-        self.select_by_status(listed_states, self.status_dict)
+     
+        try:
+            self.select_by_status(listed_states, self.status_dict)
+        except:
+            print('select by status is a problem')
         n = []
         for i in listed_attributes: 
             n.append(self.attribute_dict[i.lower()])
         attribute_ordered = [list(self.attribute_dict.keys())[list(self.attribute_dict.values()).index(i)]for i in sorted(n)]
-        
+
         search_data = self.collect_data_search_page(attribute_ordered, amount_of_data=amount_of_data)
         nct_numbers = [e[search_data[0].index('nct number')] for e in search_data[1:]]
         search_data[0].extend(['inclusion', 'exclusion', 'enrollment'])
         for index, nct in enumerate(nct_numbers):
             if index % 100 == 0 and index!= 0:
                 print("Collected Data from {} Studies: ".format(index))
-        
+
             inc, exc = self.get_criteria(nct)
             enrol = self.get_enrollment(nct)
             search_data[index + 1].extend([inc, exc, enrol])
-                
         return search_data
+#     except: 
+#         print('no data available with the specified status')
+
         
