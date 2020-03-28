@@ -2,7 +2,7 @@
 
 clinicaltrials.gov is an important resource of clinical trial data. However, downloading the data from the website can be more time consuming than necessary and there is not a way to download the information on enrollment, inclusion and exclusion criteria. The point of this project is to facilitate downloading such information, that may come in handy, examples of that are when doing a feasability study of clinical trials or when studying the impact of words used in patient selection criteria on the enrollment.
 
-
+[DISCLAIMER: this code isn't actively maintained by me and may have some bugs] 
 # Dependencies
 
 All the dependencies are specified in the (requirements.txt) file.
