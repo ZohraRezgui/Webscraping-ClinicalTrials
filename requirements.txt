@@ -6,6 +6,7 @@ bs4==0.0.1
 certifi==2019.11.28
 chardet==3.0.4
 chromedriver-autoinstaller==0.2.0
+cycler==0.10.0
 decorator==4.4.1
 defusedxml==0.6.0
 entrypoints==0.3
@@ -23,7 +24,9 @@ jupyter==1.0.0
 jupyter-client==5.3.4
 jupyter-console==6.0.0
 jupyter-core==4.6.1
+kiwisolver==1.1.0
 MarkupSafe==1.1.1
+matplotlib==3.2.1
 mistune==0.8.4
 more-itertools==8.0.2
 nb-conda==2.2.1
@@ -41,6 +44,7 @@ prometheus-client==0.7.1
 prompt-toolkit==2.0.10
 ptyprocess==0.6.0
 Pygments==2.5.2
+pyparsing==2.4.6
 pyrsistent==0.15.6
 python-dateutil==2.8.1
 pytz==2019.3
