@@ -27,7 +27,7 @@ jupyter-core==4.6.1
 kiwisolver==1.1.0
 MarkupSafe==1.1.1
 matplotlib==3.2.1
-mistune==0.8.4
+mistune==2.0.3
 more-itertools==8.0.2
 nb-conda==2.2.1
 nb-conda-kernels==2.2.2
